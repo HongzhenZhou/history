@@ -93,19 +93,24 @@ function buildChart(item, idx) {
   const Y = v => PAD_T + IH * (1 - (v - y0) / (y1 - y0));
 
   // 网格与 y 轴刻度
+  // 刻度的**小数位按数值跨度决定**：跨度小时用整数会把相邻刻度显示成同一个数，
+  // 甚至出现 "-0"（浮点减法会产生负零）。原来固定 toFixed(0) 就有这个问题。
+  const span0 = y1 - y0;
+  const dec = span0 >= 50 ? 0 : (span0 >= 5 ? 1 : 2);
   [0, 0.25, 0.5, 0.75, 1].forEach(f => {
     const v = y0 + (y1 - y0) * (1 - f);
     const yy = PAD_T + IH * f;
     gGrid.appendChild(el("line", {x1: PAD_L, y1: yy, x2: PAD_L + IW, y2: yy,
                                    stroke: "#eef0f2", "stroke-width": 1}));
-    const t = el("text", {x: PAD_L - 5, y: yy + 3, "font-size": 9,
-                           fill: "#b0b0b5", "text-anchor": "end"});
-    t.textContent = v.toFixed(0);
+    const t = el("text", {x: PAD_L - 5, y: yy + 3, "font-size": 10,
+                           fill: "#8e8e93", "text-anchor": "end"});
+    // `Math.abs(v) < 1e-9 ? 0 : v` 把 -0 归一成 0
+    t.textContent = (Math.abs(v) < 1e-9 ? 0 : v).toFixed(dec);
     gGrid.appendChild(t);
   });
   // x 轴首尾日期
   [0, vals.length - 1].forEach((i, k) => {
-    const t = el("text", {x: X(i), y: H - 5, "font-size": 9, fill: "#b0b0b5",
+    const t = el("text", {x: X(i), y: H - 5, "font-size": 10, fill: "#6b6b70",
                            "text-anchor": k === 0 ? "start" : "end"});
     t.textContent = item.dates[i];
     gGrid.appendChild(t);
