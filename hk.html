@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,user-scalable=yes">
 <title>港股 · 市场广度交互式走势 2026-10-09</title>
 <style>
  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
@@ -23,8 +24,12 @@
              font-variant-numeric: tabular-nums; }
  .readout b { color: #0a84ff; }
  .tip { font-size: 11px; color: #b0b0b5; margin-top: 6px; }
+ /* ⚠ 这里不能用 `touch-action: none` —— 它会**同时禁掉浏览器的手势缩放**，
+    在触控板/触屏上表现为"页面无法缩放"（踩过）。
+    只把**横向**手势留给十字线（需要横向拖动定位），
+    纵向滚动与捏合缩放交还浏览器。 */
  svg { display: block; width: 100%; height: auto; cursor: crosshair;
-        touch-action: none; }
+        touch-action: pan-y pinch-zoom; }
 </style></head><body>
 <h1>港股 · 市场广度交互式走势 2026-10-09</h1>
 <div class="sub">区间 2024-09-26 ~ 2026-10-09
